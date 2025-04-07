@@ -1,6 +1,8 @@
 import sys
 import os
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from scripts.compute_kpis import store_category_kpis_in_dynamodb, store_order_kpis_in_dynamodb
 
 import pytest
 from unittest.mock import patch, MagicMock
