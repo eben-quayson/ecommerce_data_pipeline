@@ -14,6 +14,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scripts.compute_kpis import (
     store_category_kpis_in_dynamodb,
     store_order_kpis_in_dynamodb,
+    calculate_category_kpis,
+    calculate_order_kpis,
 )
 
 # --- Fixtures ---
