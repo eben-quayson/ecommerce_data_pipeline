@@ -37,7 +37,7 @@ env:
   ECR_REPOSITORY_2: ecr_repo_2           # Your second ECR repository
   ECS_SERVICE: ecom_t_service            # Your ECS service
   ECS_CLUSTER: ecom_container_cluster    # Your ECS cluster
-  ECS_TASK_DEFINITION: ./json_scripts/task_dfn1        # The path to your ECS task definition file
+  ECS_TASK_DEFINITION: ./json_scripts/task_definition.json        # The path to your ECS task definition file
   CONTAINER_NAME_1: ecom_container_1     # Name of the first container in ECS task definition
   CONTAINER_NAME_2: ecom_container_2     # Name of the second container in ECS task definition
 
