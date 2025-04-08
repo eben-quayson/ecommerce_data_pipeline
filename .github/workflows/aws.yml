@@ -31,14 +31,14 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: eu-west-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: ecr_repo           # set this to your Amazon ECR repository name
-  ECS_SERVICE: ecom_t_service                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: ecom_container_cluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: task_dfn1 # set this to the path to your Amazon ECS task definition
-                                               # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: ecom_container          # set this to the name of the container in the
-                                               # containerDefinitions section of your task definition
+  AWS_REGION: eu-west-1                   # set this to your preferred AWS region
+  ECR_REPOSITORY_1: ecr_repo_1           # set this to your first Amazon ECR repository name
+  ECR_REPOSITORY_2: ecr_repo_2           # set this to your second Amazon ECR repository name
+  ECS_SERVICE: ecom_t_service            # set this to your Amazon ECS service name
+  ECS_CLUSTER: ecom_container_cluster    # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: task_dfn1        # set this to the path to your Amazon ECS task definition
+  CONTAINER_NAME_1: ecom_container_1     # set this to the name of the first container in the task definition
+  CONTAINER_NAME_2: ecom_container_2     # set this to the name of the second container in the task definition
 
 permissions:
   contents: read
@@ -64,26 +64,35 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
+    - name: Build, tag, and push first image to Amazon ECR
+      id: build-image-1
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_1:$IMAGE_TAG ./scripts/transformation_scripts
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_1:$IMAGE_TAG
+        echo "image_1=$ECR_REGISTRY/$ECR_REPOSITORY_1:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-    - name: Fill in the new image ID in the Amazon ECS task definition
+    - name: Build, tag, and push second image to Amazon ECR
+      id: build-image-2
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_2:$IMAGE_TAG ./scripts/validation_scripts
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_2:$IMAGE_TAG
+        echo "image_2=$ECR_REGISTRY/$ECR_REPOSITORY_2:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Fill in the new image IDs in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
+        container-name-1: ${{ env.CONTAINER_NAME_1 }}
+        container-name-2: ${{ env.CONTAINER_NAME_2 }}
+        image-1: ${{ steps.build-image-1.outputs.image_1 }}
+        image-2: ${{ steps.build-image-2.outputs.image_2 }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -92,3 +101,4 @@ jobs:
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
+
