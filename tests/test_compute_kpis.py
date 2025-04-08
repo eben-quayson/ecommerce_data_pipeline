@@ -48,6 +48,8 @@ def spark_session():
 
     spark = builder.getOrCreate()
 
+    print(f"\n\n--- Detected Spark Version: {spark.version} ---\n\n")
+
     # Optional: Log the Hadoop config Spark is actually using for debugging
     # conf = spark.sparkContext._jsc.hadoopConfiguration()
     # print("Hadoop fs.s3a.impl:", conf.get("fs.s3a.impl"))
