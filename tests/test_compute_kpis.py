@@ -9,7 +9,7 @@ import pandas as pd
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import ONLY the calculation functions to test
-from scrpits.compute_kpis import (
+from scripts.compute_kpis import (
     calculate_category_kpis,
     calculate_order_kpis
     # Removed store_* and run_kpi_job imports
