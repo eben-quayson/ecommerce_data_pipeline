@@ -20,6 +20,41 @@ from scripts.compute_kpis import (
 )
 
 # --- Fixtures ---
+@pytest.fixture(scope="session")
+def spark_session():
+    """Creates a Spark session configured for S3A access (for testing)."""
+    # Define required Hadoop/AWS JAR packages
+    # Versions might need adjustment based on your Spark/Hadoop environment.
+    # Check Maven Repository for latest compatible versions if needed.
+    hadoop_aws_jar = "org.apache.hadoop:hadoop-aws:3.3.4" # Common version, check compatibility
+    aws_sdk_jar = "com.amazonaws:aws-java-sdk-bundle:1.12.367" # Common version
+
+    builder = SparkSession.builder \
+        .appName("pytest-spark-testing") \
+        .master("local[2]") \
+        .config("spark.sql.decimalOperations.allowPrecisionLoss", "false") \
+        .config("spark.jars.packages", f"{hadoop_aws_jar},{aws_sdk_jar}") \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config("spark.hadoop.fs.s3a.path.style.access", "true") \
+        .config("spark.hadoop.fs.s3a.fast.upload", "true") \
+        .config("spark.hadoop.fs.s3a.fast.upload.buffer", "bytebuffer") \
+        .config("spark.hadoop.fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+        # Alternatively, if Anonymous doesn't work reliably with your moto setup:
+        # .config("spark.hadoop.fs.s3a.access.key", "testing") \ # Use dummy keys
+        # .config("spark.hadoop.fs.s3a.secret.key", "testing") \
+        # You might need to configure the endpoint if moto runs as a separate server,
+        # but with the decorator/context manager, it often intercepts correctly without it.
+        # .config("spark.hadoop.fs.s3a.endpoint", "http://localhost:5000") # Example if moto server runs on 5000
+
+    spark = builder.getOrCreate()
+
+    # Optional: Log the Hadoop config Spark is actually using for debugging
+    # conf = spark.sparkContext._jsc.hadoopConfiguration()
+    # print("Hadoop fs.s3a.impl:", conf.get("fs.s3a.impl"))
+    # print("Hadoop fs.s3a.aws.credentials.provider:", conf.get("fs.s3a.aws.credentials.provider"))
+    # print("Hadoop fs.s3a.path.style.access:", conf.get("fs.s3a.path.style.access"))
+
+    yield spark
 
 @pytest.fixture(scope="session")
 def spark_session():
