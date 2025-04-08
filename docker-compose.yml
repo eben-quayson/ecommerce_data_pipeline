@@ -1,0 +1,16 @@
+version: '3.10'
+
+services:
+  transformation:
+    build:
+      context: ./scripts/transformation_scripts
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/app/data
+
+  validation:
+    build:
+      context: ./scripts/validation_scripts
+      dockerfile: Dockerfile
+    volumes:
+      - ./output:/app/output
