@@ -16,6 +16,7 @@ from scripts.compute_kpis import (
     store_order_kpis_in_dynamodb,
     calculate_category_kpis,
     calculate_order_kpis,
+    run_kpi_job
 )
 
 # --- Fixtures ---
