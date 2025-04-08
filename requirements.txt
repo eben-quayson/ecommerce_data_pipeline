@@ -1,3 +1,4 @@
 pyspark
 boto3
 moto[all]
+pandas
