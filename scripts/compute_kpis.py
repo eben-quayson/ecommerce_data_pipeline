@@ -105,7 +105,3 @@ if __name__ == "__main__":
     # Stop the Spark session
     spark.stop()
 
-    if __name__ == "__main__":
-        # This is just for testing purposes, you can remove this part in production
-
-        pass
