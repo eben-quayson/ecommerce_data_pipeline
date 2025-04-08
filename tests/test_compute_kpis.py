@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 import boto3
-from moto import mock_dynamodb
+from moto import mock_aws
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
 from compute_kpis import store_category_kpis_in_dynamodb, store_order_kpis_in_dynamodb
@@ -13,7 +13,7 @@ def spark_session():
     return SparkSession.builder.master("local").appName("Test").getOrCreate()
 
 
-@mock_dynamodb
+@mock_aws
 def test_store_category_kpis_in_dynamodb(spark_session):
     # Mock DynamoDB
     dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
@@ -45,7 +45,7 @@ def test_store_category_kpis_in_dynamodb(spark_session):
     assert items[1]["category"] == "Books"
 
 
-@mock_dynamodb
+@mock_aws
 def test_store_order_kpis_in_dynamodb(spark_session):
     # Mock DynamoDB
     dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
