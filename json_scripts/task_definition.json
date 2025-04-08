@@ -93,6 +93,5 @@
     },
     "registeredAt": "2025-04-08T14:14:59.241Z",
     "registeredBy": "arn:aws:sts::182399707265:assumed-role/DCEPrincipal-dce/qAK4eoK1zi__ebenezer+quayson+amalitech+com",
-    "enableFaultInjection": false,
     "tags": []
   }
