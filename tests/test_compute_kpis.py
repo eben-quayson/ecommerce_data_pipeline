@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts")))
+
 import pytest
 from unittest.mock import MagicMock, patch
 import boto3
