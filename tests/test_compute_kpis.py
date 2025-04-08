@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from moto import mock_dynamodb
+from moto.dynamodb import mock_dynamodb
 import boto3
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
