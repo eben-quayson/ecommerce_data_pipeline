@@ -4,6 +4,7 @@ from pyspark.sql.functions import col, countDistinct, sum, when, to_date
 import boto3
 from decimal import Decimal # Import Decimal for DynamoDB compatibility
 
+
 # --- Calculation Functions ---
 def calculate_category_kpis(order_items_df: DataFrame, products_df: DataFrame) -> DataFrame:
     items_with_category = order_items_df.join(
@@ -117,16 +118,16 @@ def run_kpi_job(spark: SparkSession, s3_base_path: str, category_table: str, ord
     store_order_kpis_in_dynamodb(order_kpis_result_df, order_table)
 
 
-# Example of how to run it (e.g., if __name__ == "__main__": block)
-# if __name__ == "__main__":
-#     spark = SparkSession.builder \
-#         .appName("DynamoDB Integration with Spark") \
-#         .getOrCreate()
-#
-#     S3_BASE = "s3://ecom-bucket-gyenyame/Data" # Or read from config
-#     CAT_TABLE = "category_kpis_table"
-#     ORD_TABLE = "order_kpis_table"
-#
-#     run_kpi_job(spark, S3_BASE, CAT_TABLE, ORD_TABLE)
-#
-#     spark.stop()
+
+if __name__ == "__main__":
+    spark = SparkSession.builder \
+        .appName("DynamoDB Integration with Spark") \
+        .getOrCreate()
+
+    S3_BASE = "s3://ecom-bucket-gyenyame/Data" # Or read from config
+    CAT_TABLE = "category_kpis_table"
+    ORD_TABLE = "order_kpis_table"
+
+    run_kpi_job(spark, S3_BASE, CAT_TABLE, ORD_TABLE)
+
+    spark.stop()
