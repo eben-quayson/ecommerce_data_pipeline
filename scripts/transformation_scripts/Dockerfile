@@ -10,6 +10,9 @@ COPY . /app
 # Install any required Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install curl for downloading JARs
+RUN apt-get update && apt-get install -y  curl
+
 ENV HADOOP_VERSION=3.2.2
 ENV AWS_SDK_VERSION=1.11.1026
 
