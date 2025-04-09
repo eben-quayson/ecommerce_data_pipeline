@@ -3,6 +3,8 @@ from pyspark.sql import SparkSession
 # Initialize Spark Session
 spark = SparkSession.builder \
     .appName("CSV Column Validator") \
+    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+    .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.DefaultAWSCredentialsProviderChain") \
     .getOrCreate()
 
 # Define S3 paths
