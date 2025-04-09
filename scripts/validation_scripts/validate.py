@@ -17,10 +17,19 @@ s3_paths = {
 
 # Define expected columns
 expected_columns = {
-    "order_items": {"id", "order_id", "product_id", "quantity", "sale_price", "status", "created_at"},
-    "orders": {"order_id", "user_id", "status", "created_at"},
-    "products": {"id", "name", "category", "price"}
+    "order_items": {
+        "id", "order_id", "user_id", "product_id", "status",
+        "created_at", "shipped_at", "delivered_at", "returned_at", "sale_price"
+    },
+    "orders": {
+        "order_id", "user_id", "status", "created_at",
+        "returned_at", "shipped_at", "delivered_at", "num_of_item"
+    },
+    "products": {
+        "id", "sku", "cost", "category", "name", "brand", "retail_price", "department"
+    }
 }
+
 
 # Function to validate columns
 def validate_columns(df, expected_cols, table_name):
