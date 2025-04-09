@@ -36,11 +36,35 @@
       },
       {
         "name": "ecom_container_2",
-        "image": "182399707265.dkr.ecr.eu-west-1.amazonaws.com/ecr_repo_2:old_image_id_2",
+        "image": "182399707265.dkr.ecr.eu-west-1.amazonaws.com/ecr_repo_2:f2bac216031d3ff8fc696e76b986ec3140bb227b",
         "cpu": 0,
-        "essential": false, 
-        "environment": []
+        "portMappings": [
+          {
+            "containerPort": 82,
+            "hostPort": 82,
+            "protocol": "tcp",
+            "name": "ecom_container-82-tcp",
+            "appProtocol": "http"
+          }
+        ],
+        "essential": false,
+        "environment": [],
+        "mountPoints": [],
+        "volumesFrom": [],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/",
+            "mode": "non-blocking",
+            "awslogs-create-group": "true",
+            "max-buffer-size": "25m",
+            "awslogs-region": "eu-west-1",
+            "awslogs-stream-prefix": "ecs"
+          }
+        },
+        "systemControls": []
       }
+      
     ],
     "family": "transformation_dfn",
     "executionRoleArn": "arn:aws:iam::182399707265:role/ecsTaskExecutionRole",
