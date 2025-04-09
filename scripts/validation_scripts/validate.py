@@ -5,13 +5,14 @@ spark = SparkSession.builder \
     .appName("CSV Column Validator") \
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
     .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.DefaultAWSCredentialsProviderChain") \
+    .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.1") \
     .getOrCreate()
 
 # Define S3 paths
 s3_paths = {
-    "order_items": "s3://ecom-bucket-gyenyame/Data/order_items/*.csv",
-    "orders": "s3://ecom-bucket-gyenyame/Data/orders/*.csv",
-    "products": "s3://ecom-bucket-gyenyame/Data/products/*.csv"
+    "order_items": "s3a://ecom-bucket-gyenyame/Data/order_items/*.csv",
+    "orders": "s3a://ecom-bucket-gyenyame/Data/orders/*.csv",
+    "products": "s3a://ecom-bucket-gyenyame/Data/products/*.csv"
 }
 
 # Define expected columns

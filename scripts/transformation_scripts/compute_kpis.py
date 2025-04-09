@@ -122,9 +122,12 @@ def run_kpi_job(spark: SparkSession, s3_base_path: str, category_table: str, ord
 if __name__ == "__main__":
     spark = SparkSession.builder \
         .appName("DynamoDB Integration with Spark") \
+        .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.DefaultAWSCredentialsProviderChain") \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
+        .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.1") \
         .getOrCreate()
 
-    S3_BASE = "s3://ecom-bucket-gyenyame/Data" # Or read from config
+    S3_BASE = "s3a://ecom-bucket-gyenyame/Data" # Or read from config
     CAT_TABLE = "category_kpis_table"
     ORD_TABLE = "order_kpis_table"
 
