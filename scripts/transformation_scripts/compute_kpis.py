@@ -2,7 +2,7 @@
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import col, countDistinct, sum, when, to_date
 import boto3
-from decimal import Decimal # Import Decimal for DynamoDB compatibility
+from decimal import Decimal # Import Decimal for DynamoDB compatibility 
 
 
 # --- Calculation Functions ---
@@ -12,8 +12,8 @@ def calculate_category_kpis(order_items_df: DataFrame, products_df: DataFrame) -
         order_items_df.product_id == products_df.id,
         "inner"
     )
-    # Assuming 'created_at' is in order_items_df for simplicity here
-    items_with_category = items_with_category.withColumn("order_date", to_date(col("created_at"), "yyyy-MM-dd HH:mm:ss")) # Be explicit with format if known
+
+    items_with_category = items_with_category.withColumn("order_date", to_date(col("created_at"), "yyyy-MM-dd HH:mm:ss")) 
 
     category_kpis = items_with_category.groupBy("category", "order_date").agg(
         sum("sale_price").alias("daily_revenue"),
@@ -26,7 +26,7 @@ def calculate_order_kpis(orders_df: DataFrame, order_items_df: DataFrame) -> Dat
     orders = orders_df.alias("orders")
     items = order_items_df.alias("items")
 
-    # Assuming 'created_at' is in orders_df for simplicity here
+    
     orders = orders.withColumn("order_date", to_date(col("created_at"), "yyyy-MM-dd HH:mm:ss")) # Be explicit with format if known
 
     orders_with_items = orders.join(items, col("orders.order_id") == col("items.order_id"), "left")
@@ -40,7 +40,7 @@ def calculate_order_kpis(orders_df: DataFrame, order_items_df: DataFrame) -> Dat
     )
     return order_kpis
 
-# --- DynamoDB Storage Functions (Keep as they were, maybe add Decimal conversion) ---
+
 def store_category_kpis_in_dynamodb(category_kpis_df: DataFrame, table_name: str):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)
