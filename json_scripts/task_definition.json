@@ -1,6 +1,6 @@
 {
     "taskDefinitionArn": "arn:aws:ecs:eu-west-1:182399707265:task-definition/transformation_dfn:1",
-    
+
     "containerDefinitions": [
       {
         "name": "ecom_container_1",
@@ -15,7 +15,7 @@
             "appProtocol": "http"
           }
         ],
-        "essential": true,
+        "essential": false,
         "environment": [],
         "environmentFiles": [],
         "mountPoints": [],
@@ -48,7 +48,7 @@
             "appProtocol": "http"
           }
         ],
-        "essential": false,
+        "essential": true,
         "environment": [],
         "mountPoints": [],
         "volumesFrom": [],
