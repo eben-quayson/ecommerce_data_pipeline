@@ -44,6 +44,7 @@
     ],
     "family": "transformation_dfn",
     "executionRoleArn": "arn:aws:iam::182399707265:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::182399707265:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
     "volumes": [],
