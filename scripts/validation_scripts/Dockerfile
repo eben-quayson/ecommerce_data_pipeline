@@ -2,7 +2,7 @@
 FROM public.ecr.aws/x8r1y9g6/pyspark:v9
 
 # Install necessary dependencies
-RUN apt-get update && apt-get install -y python3 py3-pip bash curl
+RUN apt-get update && apt-get install -y python3 python3-pip bash curl
 
 # Install PySpark
 RUN pip3 install pyspark boto3
