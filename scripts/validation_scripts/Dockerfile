@@ -2,7 +2,7 @@
 FROM public.ecr.aws/x8r1y9g6/pyspark:v9
 
 # Install necessary dependencies
-RUN apk add --no-cache python3 py3-pip bash
+RUN apt-get update && apt-get install -y python3 py3-pip bash curl
 
 # Install PySpark
 RUN pip3 install pyspark boto3
@@ -13,8 +13,6 @@ WORKDIR /app/scripts
 # Copy the script from your local machine to the container
 COPY validate.py /app/scripts/
 
-# Install curl for downloading JARs
-RUN apt-get update && apt-get install -y  curl
 
 ENV HADOOP_VERSION=3.2.2
 ENV AWS_SDK_VERSION=1.11.1026
