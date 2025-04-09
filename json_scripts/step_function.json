@@ -1,0 +1,61 @@
+{
+    "Comment": "A description of my state machine",
+    "StartAt": "ECS RunTask",
+    "States": {
+      "ECS RunTask": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::ecs:runTask",
+        "Parameters": {
+          "LaunchType": "FARGATE",
+          "Cluster": "arn:aws:ecs:eu-west-1:182399707265:cluster/ecom_container_cluster",
+          "TaskDefinition": "arn:aws:ecs:eu-west-1:182399707265:task-definition/transformation_dfn:13",
+          "NetworkConfiguration": {
+            "AwsvpcConfiguration": {
+              "Subnets": [
+                "subnet-00e974b91135dce33"
+              ],
+              "SecurityGroups": [
+                "sg-0d78f0b98b5976cb5"
+              ],
+              "AssignPublicIp": "ENABLED"
+            }
+          },
+          "Overrides": {
+            "ContainerOverrides": [
+              {
+                "Name": "ecom_container_1",
+                "Command": [
+                  "python3",
+                  "validate.py"
+                ]
+              },
+              {
+                "Name": "ecom_container_2",
+                "Command": [
+                  "python3",
+                  "compute_kpis.py"
+                ]
+              }
+            ]
+          }
+        },
+        "Next": "Input Message"
+      },
+      "Input Message": {
+        "Type": "Pass",
+        "Result": {
+          "Message": "Data Successfully Processed."
+        },
+        "Next": "SNS Publish"
+      },
+      "SNS Publish": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::sns:publish",
+        "Parameters": {
+          "TopicArn": "arn:aws:sns:eu-west-1:182399707265:ecom_topic",
+          "Message.$": "$.Message"
+        },
+        "End": true
+      }
+    }
+  }
