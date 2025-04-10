@@ -2,6 +2,9 @@
 
 This document outlines the architecture of the data pipeline responsible for calculating Key Performance Indicators (KPIs) from e-commerce data stored in Amazon S3 and persisting them in Amazon DynamoDB.
 
+![Dashboard Screenshot](dashboard.png)
+
+
 ## Components
 
 1.  **Data Source:**
