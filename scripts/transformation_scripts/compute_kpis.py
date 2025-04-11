@@ -11,6 +11,26 @@ logger = logging.getLogger(__name__)
 
 # --- Calculation Functions ---
 def calculate_category_kpis(order_items_df: DataFrame, products_df: DataFrame) -> DataFrame:
+    """
+    Calculates daily KPIs aggregated by product category.
+
+    Joins order items with products to get category information, then groups
+    by category and order date to compute daily revenue, average order value,
+    and average return rate per category.
+
+    Args:
+        order_items_df: Spark DataFrame containing order item data.
+                        Expected columns: product_id, created_at, sale_price, order_id, status.
+        products_df: Spark DataFrame containing product data.
+                     Expected columns: id, category.
+
+    Returns:
+        A Spark DataFrame with columns: category, order_date, daily_revenue,
+        avg_order_value, avg_return_rate.
+
+    Raises:
+        Exception: If any error occurs during the Spark computation.
+    """
     try:
         logger.info("Starting calculation of category KPIs.")
         items_with_category = order_items_df.join(
@@ -33,6 +53,22 @@ def calculate_category_kpis(order_items_df: DataFrame, products_df: DataFrame) -
         raise
 
 def calculate_order_kpis(orders_df: DataFrame, order_items_df: DataFrame) -> DataFrame:
+    """
+    Calculates daily KPIs aggregated by order date.
+
+    Args:
+        orders_df: Spark DataFrame containing order data.
+                   Expected columns: order_id, user_id, created_at.
+        order_items_df: Spark DataFrame containing order item data.
+                        Expected columns: order_id, sale_price, status.         
+    Returns:
+        A Spark DataFrame with columns: order_date, total_orders,
+        total_revenue, total_items_sold, return_rate, unique_customers. 
+    
+    Raises:
+        Exception: If any error occurs during the Spark computation.
+
+    """
     try:
         logger.info("Starting calculation of order KPIs.")
         orders = orders_df.alias("orders")
@@ -58,6 +94,14 @@ def calculate_order_kpis(orders_df: DataFrame, order_items_df: DataFrame) -> Dat
 
 
 def store_category_kpis_in_dynamodb(category_kpis_df: DataFrame, table_name: str):
+    """
+    Stores category KPIs in a DynamoDB table.
+    Args:
+        category_kpis_df: Spark DataFrame containing category KPIs.
+        table_name: Name of the DynamoDB table to store the KPIs.
+    Raises:
+        Exception: If any error occurs during the DynamoDB write operation.
+    """
     try:
         logger.info(f"Storing category KPIs in DynamoDB table: {table_name}")
         dynamodb = boto3.resource('dynamodb')
@@ -87,6 +131,14 @@ def store_category_kpis_in_dynamodb(category_kpis_df: DataFrame, table_name: str
 
 
 def store_order_kpis_in_dynamodb(order_kpis_df: DataFrame, table_name: str):
+    """
+    Stores order KPIs in a DynamoDB table.
+    Args:
+        order_kpis_df: Spark DataFrame containing order KPIs.
+        table_name: Name of the DynamoDB table to store the KPIs.
+    Raises:
+        Exception: If any error occurs during the DynamoDB write operation.
+    """
     try:
         logger.info(f"Storing order KPIs in DynamoDB table: {table_name}")
         dynamodb = boto3.resource('dynamodb')
@@ -118,6 +170,17 @@ def store_order_kpis_in_dynamodb(order_kpis_df: DataFrame, table_name: str):
 
 # --- Main Execution Logic (can be in a main function) ---
 def run_kpi_job(spark: SparkSession, s3_base_path: str, category_table: str, order_table: str):
+    """
+    Main function to run the KPI job.
+    Args:
+        spark: Spark session object.
+        s3_base_path: S3 base path for input data.
+        category_table: DynamoDB table name for category KPIs.
+        order_table: DynamoDB table name for order KPIs.
+    Raises:
+        Exception: If any error occurs during the job execution.
+    """
+    
     try:
         logger.info("Starting KPI job.")
         logger.info(f"Loading data from S3 base path: {s3_base_path}")
